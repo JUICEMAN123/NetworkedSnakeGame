@@ -79,8 +79,10 @@ class ServerThread extends Thread {
 					StringTokenizer st = new StringTokenizer(inputLine);
 					switch(st.nextToken()) {
 						case "Col":
+							String s = "RecCol " + st.nextToken() + " " + st.nextToken();
 							for (int i = 0; i < server.outs.length; i++) {
-								server.outs[i].println(st.nextToken() + st.nextToken());
+								server.outs[i].println(s);
+								//System.out.println(s);
 						    }
 			    	}
 				}

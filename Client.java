@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.StringTokenizer;
 
@@ -20,6 +21,7 @@ public class Client{
 	public int userID;
 	public int userLimit;
 	public int userCount;
+	public Socket socket;
 	
 	public Game game;
 	public Menus menus = new Menus(this);
@@ -34,7 +36,7 @@ public class Client{
 	}
 	
 	public void Connect(JFrame frame) throws UnknownHostException, IOException {
-		Socket socket = new Socket(host, port);
+		socket = new Socket(host, port);
 		in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 		out = new PrintWriter(socket.getOutputStream(), true);
 		initializeGame();
@@ -80,11 +82,11 @@ class ClientThreadCOMMS extends Thread {
 	public Client client;
 	
 	public ClientThreadCOMMS(Client client) {
-		this.client = client;
+		this.client = client; 
 	}
 	
 	public void run() {
-		while(true) {
+		while(!Thread.interrupted()) {
 			try {
 				String input;
 				input = client.in.readLine();
@@ -108,9 +110,12 @@ class ClientThreadCOMMS extends Thread {
 					//get input
 					input = client.in.readLine();
 				}
-			} 
-			catch(IOException e) {
-				e.printStackTrace();
+			}
+			catch(SocketException e1) {
+				this.interrupt();
+			}
+			catch(IOException e2) {
+				e2.printStackTrace();
 			}
 		}
 	}

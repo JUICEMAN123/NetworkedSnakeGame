@@ -11,7 +11,7 @@ import java.util.StringTokenizer;
 public class Server {
 
 	public static File DATA_FILE = new File("C:\\Users\\onphi\\Desktop\\Ojas\\Coding\\CodingFiles\\Networking\\data.txt");
-	public static final int userLimit = 5;
+	public static final int userLimit = 4;
 	public PrintWriter[] outs = new PrintWriter[userLimit];
     public BufferedReader[] ins = new BufferedReader[userLimit];
     public PrintWriter fileWriter = new PrintWriter(new FileWriter(DATA_FILE), true);

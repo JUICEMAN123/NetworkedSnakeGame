@@ -10,34 +10,32 @@ import java.util.StringTokenizer;
 
 public class Server {
 
-	public static File DATA_FILE = new File("C:\\Users\\onphi\\Desktop\\Ojas\\Coding\\CodingFiles\\Networking\\data.txt");
 	public static final int userLimit = 4;
 	public PrintWriter[] outs = new PrintWriter[userLimit];
     public BufferedReader[] ins = new BufferedReader[userLimit];
-    public PrintWriter fileWriter = new PrintWriter(new FileWriter(DATA_FILE), true);
     public static int userID = 0;
     public static int userCount = 0;
-	
+
     public Server(int port) throws IOException {
-    	
-    	ServerSocket serverSocket = new ServerSocket(port);    	
+
+    	ServerSocket serverSocket = new ServerSocket(port);
     	while(userID < userLimit) {
     		System.out.println("Waiting...");
     		Socket client = serverSocket.accept();
     		System.out.println("Connected to: " + client);
-    		
+
     		outs[userID] = new PrintWriter(client.getOutputStream(), true);
     		ins[userID] = new BufferedReader(new InputStreamReader(client.getInputStream()));
-    		
-    		new Thread(new ServerThread(this, userID, fileWriter)).start();
-    		
+
+    		new Thread(new ServerThread(this, userID)).start();
+
     		userID++;
     		userCount++;
-    		
+
     	}
-    	
+
     }
-    
+
     public static void main(String[] args) {
     	try {
 			new Server(1010);
@@ -45,22 +43,20 @@ public class Server {
 			e.printStackTrace();
 		}
     }
-	
+
 }
 
 class ServerThread extends Thread {
-	
+
 	public Server server;
 	public int user;
 	public boolean running = true;
-	public PrintWriter fileWriter;
-	
-	public ServerThread(Server server, int user, PrintWriter fileWriter) {
+
+	public ServerThread(Server server, int user) {
 		this.server = server;
 		this.user = user;
-		this.fileWriter = fileWriter;
 	}
-	
+
 	public void run(){
 		for (int i = 0; i < server.outs.length; i++) {
 			if(server.outs[i] != null) {
@@ -96,5 +92,5 @@ class ServerThread extends Thread {
 			}
 		}
 	}
-	
+
 }

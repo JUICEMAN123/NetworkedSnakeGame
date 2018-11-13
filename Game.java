@@ -2,11 +2,11 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.util.StringTokenizer;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 public class Game extends JFrame{
 	
@@ -21,11 +21,13 @@ public class Game extends JFrame{
 	
 	public Game(Client client) throws IOException {
 		this.client = client;
+		client.game = this;
 		colors = new Color[client.userLimit];
 		for(int i = 0; i < colors.length; i++) {
 			colors[i] = new Color(0, 0, 0);
 		}
 		colors[client.userID] = new Color(r, g, b);
+		//System.out.println(colors[client.userID].getRGB());
 		setup();
 	}
 	
@@ -38,49 +40,12 @@ public class Game extends JFrame{
 		setVisible(true);
 		add(gamePanel);
 		
-		comm();
+		new Thread(new ClientThreadCOMMS(client)).start();
 		play();
-	}
-	// TO FIX USE THREAD AND CHECK EVERY FEW MS
-	public void comm() throws IOException{
-		while(true) {
-			String input;
-			input = client.in.readLine();
-			while (input != null) {
-				// SERVER ins
-				switch(input) {
-					case "RC" :
-						//client.out.println(client.userID + " " + r + " " + g + " " + b);
-						client.out.println("Col " + client.userID + " " + colors[client.userID].getRGB());
-						for(int i = 0; i < colors.length; i++) {
-							System.out.println(colors[i].toString());
-						}
-						break;
-				}
-				
-				// OTHER CLIENTS ins
-				StringTokenizer inputCode = new StringTokenizer(input);
-				switch(inputCode.nextToken()) {
-					case "Col":
-						recieveColor(input);
-				}
-				
-				//get input
-				input = client.in.readLine();
-			}
-		}
 	}
 	
 	public void play() throws IOException {
 		
-	}
-	
-	public void recieveColor(String input) {
-		StringTokenizer st = new StringTokenizer(input);
-		String code = st.nextToken();
-		int index = Integer.parseInt(st.nextToken());
-		Color c = Color.decode(st.nextToken());
-		colors[index] = c;
 	}
 
 }
@@ -104,7 +69,7 @@ class GamePanel extends JPanel{
 				game.dispose();
 			}	
 		});	
-		System.out.println("Higuolv;cvhfbgvodn");
+		//System.out.println("Higuolv;cvhfbgvodn");
 		add(exitB);
 		
 	}

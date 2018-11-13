@@ -5,6 +5,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.StringTokenizer;
 
 import javax.swing.JFrame;
 
@@ -20,6 +21,7 @@ public class Client{
 	public int userLimit;
 	public int userCount;
 	
+	public Game game;
 	public Menus menus = new Menus(this);
 	
 	public Client(String host, int port) {
@@ -35,7 +37,13 @@ public class Client{
 		Socket socket = new Socket(host, port);
 		in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 		out = new PrintWriter(socket.getOutputStream(), true);
+		initializeGame();
 		
+		menus.play(frame);
+	}
+	
+	public void initializeGame() throws IOException {
+
 		String newConnection = in.readLine();
 		String userLimitStr = in.readLine();
 		String userCountStr = in.readLine();
@@ -60,12 +68,59 @@ public class Client{
 		this.userID = id;
 		this.userLimit = lim;
 		this.userCount = uCount;
-		
-		menus.play(frame);
-	}
-		
+	}	
+	
 	public static void main(String[] args) throws IOException {
 		new Client("localhost" , 1010);
+	}
+	
+}
+
+class ClientThreadCOMMS extends Thread {
+	public Client client;
+	
+	public ClientThreadCOMMS(Client client) {
+		this.client = client;
+	}
+	
+	public void run() {
+		while(true) {
+			try {
+				String input;
+				input = client.in.readLine();
+				while (input != null) {
+					// SERVER ins
+					switch(input) {
+						case "RC" :
+							client.out.println("Col " + client.userID + " " + client.game.colors[client.userID].getRGB());
+							for(int i = 0; i < client.game.colors.length; i++) {
+								System.out.println(client.game.colors[i].getRGB());
+							}
+							break;
+					}
+					// OTHER CLIENTS ins
+					StringTokenizer inputCode = new StringTokenizer(input);
+					switch(inputCode.nextToken()) {
+						case "Col":
+							recieveColor(input);
+					}
+					
+					//get input
+					input = client.in.readLine();
+				}
+			} 
+			catch(IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public void recieveColor(String input) {
+		StringTokenizer st = new StringTokenizer(input);
+		String code = st.nextToken();
+		int index = Integer.parseInt(st.nextToken());
+		Color c = Color.decode(st.nextToken());
+		client.game.colors[index] = c;
 	}
 	
 }

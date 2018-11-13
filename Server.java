@@ -64,9 +64,9 @@ class ServerThread extends Thread {
 	public void run(){
 		for (int i = 0; i < server.outs.length; i++) {
 			if(server.outs[i] != null) {
-				server.outs[i].println("New Connection at " + user);
-				server.outs[i].println("User Limit is " + server.userLimit);
-				server.outs[i].println("User Count is " + server.userCount);
+				server.outs[i].println("NC " + user);
+				server.outs[i].println("UL " + server.userLimit);
+				server.outs[i].println("UC " + server.userCount);
 				server.outs[i].println("RC"); //RC = requesting colors
 			}
 	    }

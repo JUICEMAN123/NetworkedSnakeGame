@@ -18,6 +18,7 @@ public class Client{
 	public String username;
 	public int userID;
 	public int userLimit;
+	public int userCount;
 	
 	public Menus menus = new Menus(this);
 	
@@ -37,8 +38,10 @@ public class Client{
 		
 		String newConnection = in.readLine();
 		String userLimitStr = in.readLine();
+		String userCountStr = in.readLine();
 		int id;
 		int lim;
+		int uCount;
 		try {
 			id = Integer.parseInt(newConnection.substring(newConnection.length() - 2));
 		}	catch(NumberFormatException e22) {
@@ -49,8 +52,14 @@ public class Client{
 		}	catch(NumberFormatException e22) {
 			lim = Integer.parseInt(userLimitStr.substring(userLimitStr.length() - 1));
 		}
+		try {
+			uCount = Integer.parseInt(userCountStr.substring(userCountStr.length() - 2));
+		}	catch(NumberFormatException e22) {
+			uCount = Integer.parseInt(userCountStr.substring(userCountStr.length() - 1));
+		}
 		this.userID = id;
 		this.userLimit = lim;
+		this.userCount = uCount;
 		
 		menus.play(frame);
 	}

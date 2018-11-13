@@ -16,6 +16,7 @@ public class Server {
     public BufferedReader[] ins = new BufferedReader[userLimit];
     public PrintWriter fileWriter = new PrintWriter(new FileWriter(DATA_FILE), true);
     public static int userID = 0;
+    public static int userCount = 0;
 	
     public Server(int port) throws IOException {
     	
@@ -31,6 +32,7 @@ public class Server {
     		new Thread(new ServerThread(this, userID, fileWriter)).start();
     		
     		userID++;
+    		userCount++;
     		
     	}
     	
@@ -64,6 +66,7 @@ class ServerThread extends Thread {
 			if(server.outs[i] != null) {
 				server.outs[i].println("New Connection at " + user);
 				server.outs[i].println("User Limit is " + server.userLimit);
+				server.outs[i].println("User Count is " + server.userCount);
 				server.outs[i].println("RC"); //RC = requesting colors
 			}
 	    }
@@ -74,12 +77,14 @@ class ServerThread extends Thread {
 				while ((inputLine = server.ins[user].readLine()) != null) {
 					if(server.outs[user] == null) {
 						running = false;
+						server.userCount--;
 						break;
 					}
 					StringTokenizer st = new StringTokenizer(inputLine);
 					switch(st.nextToken()) {
 						case "Col":
-							String s = "RecCol " + st.nextToken() + " " + st.nextToken();
+							//String s = "Col " + st.nextToken() + " " + st.nextToken();
+							String s = inputLine;
 							for (int i = 0; i < server.outs.length; i++) {
 								server.outs[i].println(s);
 								//System.out.println(s);

@@ -11,8 +11,8 @@ import javax.swing.JTextField;
 
 public class Menus extends JFrame{
 	
-	public Client client;
-	public final int WIDTH = 1024, HEIGHT = 768;
+	public Client client; 
+	public static final int WIDTH = 1024, HEIGHT = 768;
 	
 	public Menus(Client client) {
 		this.client = client;
@@ -21,7 +21,7 @@ public class Menus extends JFrame{
 	public void mainMenu(JPanel panel, JFrame frame) {
 		frame.setTitle("Network Game");
 		frame.setSize(WIDTH, HEIGHT);
-		frame.setDefaultCloseOperation(frame.EXIT_ON_CLOSE);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setResizable(false);
 		frame.setLocationRelativeTo(null);
 		
